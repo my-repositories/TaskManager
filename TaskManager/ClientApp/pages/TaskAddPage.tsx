@@ -1,27 +1,18 @@
 import * as React from 'react';
+import { observer } from 'mobx-react';
 import { RouteComponentProps } from 'react-router';
 
-import { Task } from '../shared/interfaces/Task';
-import { ApiService } from '../shared/ApiService';
+import { Task } from '../shared/models/Task';
+import TaskStore from '../shared/stores/TaskStore';
 
-interface TaskAddPageState {
-    tasks: Task[];
-}
-
-export class TaskAddPage extends React.Component<RouteComponentProps<{}>, TaskAddPageState> {
+@observer
+export class TaskAddPage extends React.Component<RouteComponentProps<{}>, {}> {
     private _task: Task = new Task();
 
     constructor() {
         super();
-        this.state = { tasks: [] };
-
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    public componentDidMount() {
-        ApiService.get('/Task')
-            .then(response => this.setState({ tasks: response.data }));
     }
 
     public handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
@@ -32,8 +23,7 @@ export class TaskAddPage extends React.Component<RouteComponentProps<{}>, TaskAd
 
     public handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        ApiService.patch('/Task', this._task)
-            .then(response => this.setState((prevState, props) => ({tasks: [...prevState.tasks, response.data]})));
+        TaskStore.saveTask(this._task);
     }
 
     public render() {
@@ -57,8 +47,8 @@ export class TaskAddPage extends React.Component<RouteComponentProps<{}>, TaskAd
                     <label>
                         Parent Task
                         <select className="form-control" name="parentId" onChange={this.handleChange} >
-                            <option value="0">-</option>
-                            { this.state.tasks.map(task =>
+                            <option key={0} value="0">-</option>
+                            { TaskStore.tasks.map(task =>
                                 <option key={task.id} value={task.id}>#{ task.id }: { task.title }</option>
                             )}
                         </select>

@@ -1,36 +1,20 @@
-import 'isomorphic-fetch';
 import * as React from 'react';
+import { observer } from 'mobx-react';
 import { RouteComponentProps } from 'react-router';
 
-import { Task } from '../shared/interfaces/Task';
+import { Task } from '../shared/models/Task';
+import TaskStore from '../shared/stores/TaskStore';
 
 interface TaskViewPageProps {
-    id: number;
+    id: string;
 }
 
-interface TaskViewPageState {
-    task: Task;
-    loading: boolean;
-}
-
-export class TaskViewPage extends React.Component<RouteComponentProps<TaskViewPageProps>, TaskViewPageState> {
-    constructor() {
-        super();
-        this.state = { task: {} as Task, loading: true };
-    }
-
-    public componentDidMount() {
-        fetch('api/Task/' + this.props.match.params.id)
-            .then(response => response.json() as Promise<Task>)
-            .then(data => {
-                this.setState({ task: data, loading: false });
-            });
-    }
-
+@observer
+export class TaskViewPage extends React.Component<RouteComponentProps<TaskViewPageProps>, {}> {
     public render() {
-        let contents = this.state.loading
-            ? <p><em>Loading...</em></p>
-            : JSON.stringify(this.state.task);
+        let contents = TaskStore.tasks.length === 0
+            ? <p><em>Sorry, Task not found ...</em></p>
+            : JSON.stringify(TaskStore.getById(+this.props.match.params.id));
 
         return <div>
             <h1>Task View</h1>
