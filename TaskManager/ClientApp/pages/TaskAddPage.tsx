@@ -23,7 +23,8 @@ export class TaskAddPage extends React.Component<RouteComponentProps<{}>, {}> {
 
     public handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        TaskStore.saveTask(this._task);
+        TaskStore.addTask(this._task)
+            .then(newTask => this.props.history.push('/task/' + newTask.id))
     }
 
     public render() {

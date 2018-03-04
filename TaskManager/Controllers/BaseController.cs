@@ -45,5 +45,16 @@ namespace TaskManager.Controllers
         {
             return Json(new { data = response });
         }
+
+        /// <summary>
+        /// The get current timestamp.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="long"/>.
+        /// </returns>
+        protected long GetCurrentTimestamp()
+        {
+            return (long)(System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds;
+        }
     }
 }

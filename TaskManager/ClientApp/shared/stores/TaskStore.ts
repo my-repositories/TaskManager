@@ -27,9 +27,22 @@ class TaskStore {
             .then(tasks => this.tasks = [...tasks]);
     }
 
-    @action public saveTask(task: Task) {
-        TaskService.saveTask(task)
-            .then(newTask => this.tasks = [...this.tasks, newTask]);
+    @action public addTask(task: Task) {
+        return TaskService.addTask(task)
+            .then(newTask => {
+                this.tasks = [...this.tasks, newTask];
+                return newTask;
+            });
+    }
+
+    @action public removeTask(task: Task) {
+        TaskService.removeTask(task)
+            .then(newTasks => this.tasks = newTasks.length > 0 ? newTasks : this.tasks);
+    }
+
+    @action public updateTask(task: Task) {
+        TaskService.updateTask(task)
+            .then(newTasks => this.tasks = newTasks.length > 0 ? newTasks : this.tasks);
     }
 
     public transformTask(task: Task): TaskWithChildren {

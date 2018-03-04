@@ -1,6 +1,7 @@
 export class Task {
     id: number;
     createdAt: number;
+    completedAt: number;
     description: string;
     estimatedTime: number;
     leadTime: number;

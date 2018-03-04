@@ -9,9 +9,10 @@
 
 namespace TaskManager.Controllers
 {
-    using System.Collections.Generic;
     using System.Linq;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+
     using Models;
 
     /// <inheritdoc />
@@ -43,6 +44,7 @@ namespace TaskManager.Controllers
         /// <returns>
         /// The <see cref="ActionResult"/>.
         /// </returns>
+        [HttpPut]
         public ActionResult AddTask([FromBody] TaskModel taskData)
         {
             if (!ModelState.IsValid)
@@ -85,6 +87,59 @@ namespace TaskManager.Controllers
         public ActionResult GetTask(int id)
         {
             return GetResponseData(Db.Tasks.FirstOrDefault(task => task.Id == id));
+        }
+
+        /// <summary>
+        /// The remove task.
+        /// </summary>
+        /// <param name="taskData">
+        /// The task data.
+        /// </param>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
+        [HttpDelete]
+        public ActionResult RemoveTask([FromBody] TaskModel taskData)
+        {
+            if (!ModelState.IsValid)
+            {
+                return GetValidationErrors();
+            }
+
+            // TODO: Remove tasks recursive
+            Db.Entry(taskData).State = EntityState.Deleted;
+            Db.SaveChanges();
+
+            return GetResponseData(Db.Tasks);
+        }
+
+        /// <summary>
+        /// The update task.
+        /// </summary>
+        /// <param name="taskData">
+        /// The task data.
+        /// </param>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
+        [HttpPatch]
+        public ActionResult UpdateTask([FromBody] TaskModel taskData)
+        {
+            if (!ModelState.IsValid)
+            {
+                return GetValidationErrors();
+            }
+
+            // TODO: Update tasks recursive
+            // TODO: ignore update if previous status == 0
+            if (taskData.Status == 3)
+            {
+                taskData.CompletedAt = GetCurrentTimestamp();
+            }
+
+            Db.Entry(taskData).State = EntityState.Modified;
+            Db.SaveChanges();
+            return GetResponseData(Db.Tasks);
         }
     }
 }

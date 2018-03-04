@@ -36,11 +36,11 @@ export const EstimationTimeView = (props: EstimationTimeViewProps) => {
     estimation.hours = getValue(jobTime.hours);
 
     return <span>
-        {estimation.years === 0 ? '' : estimation.years + 'Y'} &nbsp;
-        {estimation.months === 0 ? '' : estimation.months + 'M'} &nbsp;
-        {estimation.weeks === 0 ? '' : estimation.weeks + 'W'} &nbsp;
-        {estimation.days === 0 ? '' : estimation.days + 'd'} &nbsp;
-        {estimation.hours === 0 ? '' : estimation.hours + 'h'} &nbsp;
+        {estimation.years === 0 ? '' : estimation.years + 'Y '}
+        {estimation.months === 0 ? '' : estimation.months + 'M '}
+        {estimation.weeks === 0 ? '' : estimation.weeks + 'W '}
+        {estimation.days === 0 ? '' : estimation.days + 'd '}
+        {estimation.hours === 0 ? '' : estimation.hours + 'h '}
         {estimation.minutes === 0 ? '' : estimation.minutes + 'min'}
     </span>;
 };
