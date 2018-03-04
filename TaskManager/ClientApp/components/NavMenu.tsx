@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
+import { TasksTreeContainer } from './TasksTree';
+
 export class NavMenu extends React.Component<{}, {}> {
     public render() {
         return <div className='main-nav'>
-                <div className='navbar navbar-inverse'>
+                <div className='navbar navbar-inverse with-scrollbar'>
                 <div className='navbar-header'>
                     <button type='button' className='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
                         <span className='sr-only'>Toggle navigation</span>
@@ -31,6 +33,10 @@ export class NavMenu extends React.Component<{}, {}> {
                             <NavLink to={ '/task-list' } activeClassName='active'>
                                 <span className='glyphicon glyphicon-th-list'></span> Task List
                             </NavLink>
+                        </li>
+                        <li>
+                            <hr />
+                            <TasksTreeContainer />
                         </li>
                     </ul>
                 </div>

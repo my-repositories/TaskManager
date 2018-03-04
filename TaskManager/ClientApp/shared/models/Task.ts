@@ -9,3 +9,7 @@ export class Task {
     status: number;
     title: string;
 }
+
+export class TaskWithChildren extends Task {
+    children: TaskWithChildren[];
+}
