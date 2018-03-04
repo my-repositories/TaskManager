@@ -9,6 +9,8 @@
 
 namespace TaskManager.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// The task model.
     /// </summary>
@@ -52,6 +54,8 @@ namespace TaskManager.Models
         /// <summary>
         /// Gets or sets the responsible.
         /// </summary>
+        [Required(ErrorMessage = "Responsible is required")]
+        [MinLength(3, ErrorMessage = "Responsible must be a minimum of 3 characters")]
         public string Responsible { get; set; }
 
         /// <summary>
@@ -62,6 +66,8 @@ namespace TaskManager.Models
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
+        [Required(ErrorMessage = "Title is required")]
+        [MinLength(3, ErrorMessage = "Title must be a minimum of 3 characters")]
         public string Title { get; set; }
     }
 }

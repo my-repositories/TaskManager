@@ -1,8 +1,4 @@
 # TaskManager
-## Install
-- DataBase Management System
-  - [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
-
 ## Prerequisites
 
 Run this command in Package Manager Console

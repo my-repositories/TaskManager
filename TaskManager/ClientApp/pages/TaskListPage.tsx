@@ -3,6 +3,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 
 import { Task } from '../shared/interfaces/Task';
+import { ApiService } from '../shared/ApiService';
 import { TaskStatus } from '../components/TaskStatus';
 import { DateTimeView } from '../components/DateTimeView';
 import { EstimationTimeView } from '../components/EstimationTimeView';
@@ -19,11 +20,8 @@ export class TaskListPage extends React.Component<RouteComponentProps<{}>, TaskL
     }
 
     public componentDidMount() {
-        fetch('api/Task')
-            .then(response => response.json() as Promise<Task[]>)
-            .then(data => {
-                this.setState({ tasks: data, loading: false });
-            });
+        ApiService.get('/Task')
+            .then(response => this.setState({ tasks: response.data, loading: false }));
     }
 
     public render() {

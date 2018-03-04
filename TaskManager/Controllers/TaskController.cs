@@ -16,7 +16,7 @@ namespace TaskManager.Controllers
 
     /// <inheritdoc />
     [Route("api/[controller]")]
-    public class TaskController : Controller
+    public class TaskController : BaseController
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskController"/> class.
@@ -35,15 +35,40 @@ namespace TaskManager.Controllers
         private DAL.TaskContext Db { get; }
 
         /// <summary>
+        /// The add task.
+        /// </summary>
+        /// <param name="taskData">
+        /// The task data.
+        /// </param>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
+        public ActionResult AddTask([FromBody] TaskModel taskData)
+        {
+            if (!ModelState.IsValid)
+            {
+                return GetValidationErrors();
+            }
+
+            // compute current timestamp
+            taskData.CreatedAt = (long)(System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds;
+
+            var newTask = Db.Tasks.Add(taskData).Entity;
+            Db.SaveChanges();
+
+            return GetResponseData(newTask);
+        }
+
+        /// <summary>
         /// The get tasks.
         /// </summary>
         /// <returns>
         /// The <see cref="TaskModel"/>.
         /// </returns>
         [HttpGet]
-        public IEnumerable<TaskModel> GetTasks()
+        public ActionResult GetTasks()
         {
-            return Db.Tasks;
+            return GetResponseData(Db.Tasks);
         }
 
         /// <summary>
@@ -59,7 +84,7 @@ namespace TaskManager.Controllers
         [HttpGet]
         public ActionResult GetTask(int id)
         {
-            return Json(Db.Tasks.FirstOrDefault(task => task.Id == id));
+            return GetResponseData(Db.Tasks.FirstOrDefault(task => task.Id == id));
         }
     }
 }
