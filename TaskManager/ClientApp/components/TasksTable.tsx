@@ -10,8 +10,27 @@ interface TasksTableProps {
     tasks: Task[];
 }
 
-export const TasksTable = ({tasks}: TasksTableProps) => (
-    <table className='table'>
+export class TasksTable extends React.Component<TasksTableProps, {}> {
+    constructor() {
+        super();
+        this.computeTotalTime = this.computeTotalTime.bind(this);
+    }
+
+    public computeTotalTime(task: any, timeType: any) {
+        return this.props.tasks
+            .reduce((prev, cur) => {
+                if (cur.parentId === task.id) {
+                    prev += this.computeTotalTime(cur, timeType);
+                }
+                
+                return prev;
+            }, task[timeType])
+    }
+
+    public render() {
+        const tasks = this.props.tasks;
+
+        return <table className='table'>
         <thead>
             <tr>
                 <th>Status</th>
@@ -33,11 +52,12 @@ export const TasksTable = ({tasks}: TasksTableProps) => (
                     { task.description }
                     <SubtasksList task={task} tasks={tasks} />
                 </td>
-                <td><EstimationTimeView time={task.estimatedTime} /></td>
-                <td><EstimationTimeView time={task.leadTime} /></td>
+                <td><EstimationTimeView time={this.computeTotalTime(task, 'estimatedTime')} /></td>
+                <td><EstimationTimeView time={this.computeTotalTime(task, 'leadTime')} /></td>
                 <td>{ task.responsible }</td>
             </tr>
         )}
         </tbody>
-    </table>
-);
+    </table>;
+    }
+}

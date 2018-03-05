@@ -21,6 +21,18 @@ export class TaskViewPage extends React.Component<RouteComponentProps<TaskViewPa
     constructor() {
         super();
         this.removeTask = this.removeTask.bind(this);
+        this.computeTotalTime = this.computeTotalTime.bind(this);
+    }
+
+    public computeTotalTime(task: any, timeType: any) {
+        return TaskStore.tasks
+            .reduce((prev, cur) => {
+                if (cur.parentId === task.id) {
+                    prev += this.computeTotalTime(cur, timeType);
+                }
+                
+                return prev;
+            }, task[timeType])
     }
 
     public removeTask() {
@@ -61,10 +73,10 @@ export class TaskViewPage extends React.Component<RouteComponentProps<TaskViewPa
                     <b>Responsible:</b> {task.responsible}
                 </p>
                 {task.estimatedTime > 0 && <p className="card-text">
-                    <b>Estimated time:</b> <EstimationTimeView time={task.estimatedTime} />
+                    <b>Estimated time:</b> <EstimationTimeView time={this.computeTotalTime(task, 'estimatedTime')} />
                 </p>}
                 {task.leadTime > 0 && <p className="card-text">
-                    <b>Lead time:</b> <EstimationTimeView time={task.leadTime} />
+                    <b>Lead time:</b> <EstimationTimeView time={this.computeTotalTime(task, 'leadTime')} />
                 </p>}
                 <hr />
                 <NavLink to={`/task/${task.id}/edit`}  className="btn btn-warning">
