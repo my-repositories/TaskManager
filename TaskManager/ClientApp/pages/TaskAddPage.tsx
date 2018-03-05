@@ -4,6 +4,7 @@ import { RouteComponentProps } from 'react-router';
 
 import { Task } from '../shared/models/Task';
 import TaskStore from '../shared/stores/TaskStore';
+import NotificationService from '../shared/services/NotificationService';
 
 @observer
 export class TaskAddPage extends React.Component<RouteComponentProps<{}>, {}> {
@@ -19,12 +20,18 @@ export class TaskAddPage extends React.Component<RouteComponentProps<{}>, {}> {
         const name = event.target.name;
         const value = event.target.value;
         (this._task as any)[name] = value;
+        NotificationService.info
     }
 
     public handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         TaskStore.addTask(this._task)
             .then(newTask => this.props.history.push('/task/' + newTask.id))
+
+        NotificationService.success({
+            title: 'Success',
+            message: `Task: "${this._task.title}" has been successfully created.`
+        });
     }
 
     public render() {

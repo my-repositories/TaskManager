@@ -8,6 +8,7 @@ import { TaskStatus } from '../components/TaskStatus';
 import { SubtasksList } from '../components/SubtasksList';
 import { DateTimeView } from '../components/DateTimeView';
 import { EstimationTimeView } from '../components/EstimationTimeView';
+import NotificationService from '../shared/services/NotificationService';
 
 interface TaskViewPageProps {
     id: string;
@@ -25,6 +26,10 @@ export class TaskViewPage extends React.Component<RouteComponentProps<TaskViewPa
     public removeTask() {
         TaskStore.removeTask(this._task);
         this.props.history.push('/task-list');
+        NotificationService.success({
+            title: 'Success',
+            message: `Task: "${this._task.title}" has been successfully deleted.`
+        });
     }
 
     public render() {

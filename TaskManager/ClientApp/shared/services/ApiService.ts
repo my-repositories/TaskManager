@@ -1,5 +1,7 @@
 import 'isomorphic-fetch';
 
+import NotificationService from './NotificationService';
+
 const sendRequest = <T>(method: string, path: string, body: T) => {
     return fetch('/api/' + path, {
         method,
@@ -10,7 +12,16 @@ const sendRequest = <T>(method: string, path: string, body: T) => {
         }
     })
         .then(response => response.json())
-        .catch(error => console.warn(error));
+        .catch(error => {
+            NotificationService.error({title: 'Oops', message: 'Failed to fetch data'});
+            console.warn({
+                error,
+                msg: 'sendRequest',
+                path,
+                method,
+                body,
+            });
+        });
 };
 
 const get = (path: string) => sendRequest('GET', path, null);

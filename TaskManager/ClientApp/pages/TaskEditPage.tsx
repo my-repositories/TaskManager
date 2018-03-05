@@ -4,6 +4,7 @@ import { NavLink, RouteComponentProps } from 'react-router-dom';
 
 import { Task } from '../shared/models/Task';
 import TaskStore from '../shared/stores/TaskStore';
+import NotificationService from '../shared/services/NotificationService';
 
 interface TaskEditwPageProps {
     id: string;
@@ -29,6 +30,10 @@ export class TaskEditPage extends React.Component<RouteComponentProps<TaskEditwP
         event.preventDefault();
         TaskStore.updateTask(this._task);
         this.props.history.push('/task/' + this._task.id);
+        NotificationService.success({
+            title: 'Success',
+            message: `Task: "${this._task.title}" has been successfully updated.`
+        });
     }
 
     public render() {
