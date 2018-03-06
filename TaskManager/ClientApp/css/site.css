@@ -68,6 +68,21 @@
     }
 }
 
+.tree {
+    list-style-type: none;
+}
+.tree.folded {
+    display: none;
+}
+.tree li {
+    position: relative;
+}
+.tree li span.glyphicon {
+    cursor: pointer;
+    position: absolute;
+    left: -10px;
+}
+
 .with-scrollbar {
     overflow-x: auto;
     overflow-y: auto;
