@@ -130,13 +130,27 @@ namespace TaskManager.Controllers
                 return GetValidationErrors();
             }
 
-            // TODO: Update tasks recursive
-            // TODO: ignore update if previous status == 0
-            if (taskData.Status == 3)
+            var oldModel = Db.Tasks.AsNoTracking().FirstOrDefault(task => task.Id == taskData.Id);
+
+            if (oldModel == null)
             {
-                taskData.CompletedAt = GetCurrentTimestamp();
+                return Json(new { error = "Task not found" });
             }
 
+            // Статус "Завершена" может быть присвоен только после статусов "выполняется" и "Приостановлена"
+            if (taskData.Status == 3)
+            {
+                if ((oldModel.Status == 1 || oldModel.Status == 2))
+                {
+                    taskData.CompletedAt = GetCurrentTimestamp();                    
+                }
+                else
+                {
+                    taskData.Status = oldModel.Status;
+                }
+            }
+
+            // TODO: Update tasks recursive
             Db.Entry(taskData).State = EntityState.Modified;
             Db.SaveChanges();
             return GetResponseData(Db.Tasks);

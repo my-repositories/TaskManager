@@ -4,6 +4,7 @@ import { NavLink, RouteComponentProps } from 'react-router-dom';
 
 import { Task } from '../shared/models/Task';
 import TaskStore from '../shared/stores/TaskStore';
+import { TASK_STATUSES } from '../shared/constants/Task';
 import NotificationService from '../shared/services/NotificationService';
 
 interface TaskEditwPageProps {
@@ -28,6 +29,7 @@ export class TaskEditPage extends React.Component<RouteComponentProps<TaskEditwP
 
     public handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        this._task.status = +this._task.status;
         TaskStore.updateTask(this._task);
         this.props.history.push('/task/' + this._task.id);
         NotificationService.success({
@@ -105,6 +107,17 @@ export class TaskEditPage extends React.Component<RouteComponentProps<TaskEditwP
                     />
                 </label>
             </div>
+            {task.status !== 3 && <div className="form-group">
+                <label>
+                    Status
+                    <select className="form-control" name="status" onChange={this.handleChange} defaultValue={task.status.toString()}>
+                        <option key={0} value={0}>{TASK_STATUSES[0]}</option>
+                        <option key={1} value={1}>{TASK_STATUSES[1]}</option>
+                        <option key={2} value={2}>{TASK_STATUSES[2]}</option>
+                        {task.status !== 0 && <option key={3} value={3}>{TASK_STATUSES[3]}</option>}
+                    </select>
+                </label>
+            </div>}
             <div className="form-group">
                 <label>
                     Estimation (in minutes)
