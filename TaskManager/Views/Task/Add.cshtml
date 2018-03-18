@@ -1,1 +1,8 @@
-﻿<h2>dobavliyaska</h2>
+﻿@model TaskManager.Models.TaskModel
+
+<h1>Add Task</h1>
+@using (Html.BeginForm())
+{
+    @Html.EditorForModel()
+    <input type="submit" value="Send" />
+}

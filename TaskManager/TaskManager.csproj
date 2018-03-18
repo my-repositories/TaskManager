@@ -149,6 +149,8 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\TaskController.cs" />
+    <Compile Include="DAL\TaskContext.cs" />
+    <Compile Include="DAL\TaskInitializer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -204,6 +206,10 @@
     <Content Include="Views\Task\Add.cshtml" />
     <Content Include="Views\Task\Details.cshtml" />
     <Content Include="Views\Task\Tree.cshtml" />
+    <Content Include="Views\Task\Edit.cshtml" />
+    <Content Include="Views\Shared\_DateTimeView.cshtml" />
+    <Content Include="Views\Shared\_EstimationTimeView.cshtml" />
+    <Content Include="Views\Shared\_TaskStatus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

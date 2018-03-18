@@ -4,16 +4,20 @@ namespace TaskManager.Models
 {
     public class TaskModel
     {
+        [ScaffoldColumn(false)]
         public int Id { get; set; }
 
+        [ScaffoldColumn(false)]
         public long CreatedAt { get; set; }
 
+        [ScaffoldColumn(false)]
         public long CompletedAt { get; set; }
 
         public string Description { get; set; }
 
         public int EstimatedTime { get; set; }
 
+        [ScaffoldColumn(false)]
         public int LeadTime { get; set; }
 
         public int ParentId { get; set; }
@@ -22,6 +26,7 @@ namespace TaskManager.Models
         [MinLength(3, ErrorMessage = "Responsible must be a minimum of 3 characters")]
         public string Responsible { get; set; }
 
+        [ScaffoldColumn(false)]
         public int Status { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
