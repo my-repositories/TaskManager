@@ -46,8 +46,7 @@ namespace TaskManager.Controllers
                 return HttpNotFound();
             }
 
-            _db.Tasks.Remove(task);
-            _db.SaveChanges();
+            await _db.Database.ExecuteSqlCommandAsync(GetRemoveTaskQueryText(), id);
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
@@ -107,6 +106,21 @@ namespace TaskManager.Controllers
         public PartialViewResult Tree()
         {
             return PartialView();
+        }
+
+        private string GetRemoveTaskQueryText()
+        {
+            return @"
+    WITH [TaskWithAllChildTasks] ([Id], [ParentId]) AS
+    (
+        SELECT @p0, NULL
+        UNION ALL
+        SELECT [T].[Id], [T].[ParentId]
+        FROM [Tasks] AS [T]
+        JOIN [TaskWithAllChildTasks] AS [TC] ON ([T].[ParentId] = [TC].[Id])
+    )
+    DELETE FROM [Tasks]
+    WHERE [Id] IN (SELECT [Id] FROM [TaskWithAllChildTasks]);";
         }
     }
 }
