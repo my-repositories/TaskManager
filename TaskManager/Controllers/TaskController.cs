@@ -99,16 +99,21 @@ namespace TaskManager.Controllers
         /// The <see cref="ActionResult"/>.
         /// </returns>
         [HttpDelete]
-        public ActionResult RemoveTask([FromBody] TaskModel taskData)
+        public async Task<ActionResult> RemoveTask([FromBody] TaskModel taskData)
         {
             if (!ModelState.IsValid)
             {
                 return GetValidationErrors();
             }
 
-            // TODO: Remove tasks recursive
-            Db.Entry(taskData).State = EntityState.Deleted;
-            Db.SaveChanges();
+            var task = await _db.Tasks.FindAsync(taskData.id);
+
+            if (task == null)
+            {
+                return HttpNotFound();
+            }
+
+            await _db.Database.ExecuteSqlCommandAsync(GetRemoveTaskQueryText(), taskData.id);
 
             return GetResponseData(Db.Tasks);
         }
@@ -154,6 +159,21 @@ namespace TaskManager.Controllers
             Db.Entry(taskData).State = EntityState.Modified;
             Db.SaveChanges();
             return GetResponseData(Db.Tasks);
+        }
+        
+        private string GetRemoveTaskQueryText()
+        {
+            return @"
+    WITH [TaskWithAllChildTasks] ([Id], [ParentId]) AS
+    (
+        SELECT @p0, NULL
+        UNION ALL
+        SELECT [T].[Id], [T].[ParentId]
+        FROM [Tasks] AS [T]
+        JOIN [TaskWithAllChildTasks] AS [TC] ON ([T].[ParentId] = [TC].[Id])
+    )
+    DELETE FROM [Tasks]
+    WHERE [Id] IN (SELECT [Id] FROM [TaskWithAllChildTasks]);";
         }
     }
 }
