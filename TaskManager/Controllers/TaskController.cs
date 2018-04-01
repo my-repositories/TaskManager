@@ -1,12 +1,13 @@
-﻿using System.Net;
-using System.Web.Mvc;
+﻿using System.Data.Entity;
+using System.Net;
 using System.Threading.Tasks;
+using System.Web.Mvc;
+
 using TaskManager.Models;
+using TaskManager.Models.TaskViewModels;
 
 namespace TaskManager.Controllers
 {
-    using System.Data.Entity;
-
     public class TaskController : Controller
     {
         private readonly DAL.TaskContext _db = new DAL.TaskContext();
@@ -24,7 +25,8 @@ namespace TaskManager.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(task);
+                var addViewModel = AutoMapper.Mapper.Map<TaskModel, AddViewModel>(task);
+                return View(addViewModel);
             }
 
             // compute current timestamp
@@ -65,7 +67,6 @@ namespace TaskManager.Controllers
 
         public async Task<ActionResult> Edit(int id)
         {
-            
             var task = await _db.Tasks.FindAsync(id);
 
             if (task == null)
@@ -73,8 +74,10 @@ namespace TaskManager.Controllers
                 return HttpNotFound();
             }
 
+            var editViewModel = AutoMapper.Mapper.Map<TaskModel, EditViewModel>(task);
+
             ViewBag.Title = "Edit Task";
-            return View(task);
+            return View(editViewModel);
         }
 
         [HttpPost]
@@ -84,7 +87,8 @@ namespace TaskManager.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(task);
+                var editViewModel = AutoMapper.Mapper.Map<TaskModel, EditViewModel>(task);
+                return View(editViewModel);
             }
 
             _db.Entry(task).State = EntityState.Modified;

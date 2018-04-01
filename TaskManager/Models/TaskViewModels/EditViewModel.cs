@@ -1,14 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TaskManager.Models
+namespace TaskManager.Models.TaskViewModels
 {
-    public class TaskModel
+    public class EditViewModel
     {
         public int Id { get; set; }
-
-        public long CreatedAt { get; set; }
-
-        public long CompletedAt { get; set; }
 
         public string Description { get; set; }
 
